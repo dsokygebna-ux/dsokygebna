@@ -91,10 +91,7 @@ function Hero() {
     <section id="top" className="hero-bg relative overflow-hidden">
       <div className="mx-auto grid max-w-6xl gap-10 px-4 py-14 md:grid-cols-2 md:items-center md:py-20">
         <div className="animate-float-up order-2 md:order-1">
-          <span className="inline-flex items-center gap-2 rounded-full bg-white/70 px-3 py-1 text-xs font-bold text-primary shadow-sm">
-            طازج يومياً من مزارعنا
-          </span>
-          <p className="mt-4 max-w-lg text-base leading-relaxed text-muted-foreground sm:text-lg">
+          <p className="max-w-lg text-base leading-relaxed text-muted-foreground sm:text-lg">
             {siteConfig.brand.welcome}
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
@@ -132,8 +129,7 @@ function Hero() {
 function Products() {
   return (
     <section id="products" className="mx-auto max-w-6xl px-4 py-16">
-      <SectionHeading eyebrow="منتجاتنا" title="طبيعية بنسبة 100%" />
-      <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {siteConfig.products.map((p, i) => (
           <article
             key={p.id}
@@ -142,16 +138,17 @@ function Products() {
           >
             <div className="aspect-square overflow-hidden bg-secondary">
               <img
-                src={p.image} alt="منتج من منتجات الألبان"
+                src={p.image} alt={p.label}
                 width={1024} height={1024} loading="lazy"
                 className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
               />
             </div>
-            <div className="flex items-center justify-center p-5">
+            <div className="p-5 text-center">
+              <h3 className="text-xl font-extrabold text-foreground">{p.label}</h3>
               <a
-                href={waLink(siteConfig.whatsapp.primary, "أرغب في الطلب")}
+                href={waLink(siteConfig.whatsapp.primary, `أرغب في طلب ${p.label}`)}
                 target="_blank" rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 rounded-full bg-[var(--color-whatsapp)] px-6 py-3 text-sm font-bold text-white shadow-soft transition hover:opacity-90"
+                className="mt-4 inline-flex items-center gap-2 rounded-full bg-[var(--color-whatsapp)] px-6 py-3 text-sm font-bold text-white shadow-soft transition hover:opacity-90"
               >
                 <MessageCircle className="h-4 w-4" /> اطلب واتساب
               </a>
@@ -168,8 +165,7 @@ function Reviews() {
   return (
     <section id="reviews" className="bg-secondary/60 py-16">
       <div className="mx-auto max-w-6xl px-4">
-        <SectionHeading eyebrow="آراء العملاء" title="ثقة تكبر يوماً بعد يوم" />
-        <div className="mt-10 grid gap-6 md:grid-cols-3">
+        <div className="grid gap-6 md:grid-cols-3">
           {siteConfig.reviews.map((r, i) => (
             <div
               key={i}
@@ -210,9 +206,7 @@ function ContactSection() {
 
   return (
     <section id="contact" className="mx-auto max-w-6xl px-4 py-16">
-      <SectionHeading eyebrow="تواصل معنا" title="نحن هنا لخدمتك" />
-
-      <div className="mt-10 grid gap-6 lg:grid-cols-2">
+      <div className="grid gap-6 lg:grid-cols-2">
         {/* Info card */}
         <div className="space-y-6 rounded-3xl border border-border bg-card p-6 shadow-soft">
           <div className="grid gap-3">
@@ -249,7 +243,6 @@ function ContactSection() {
 
         {/* Form */}
         <form onSubmit={onSubmit} className="space-y-4 rounded-3xl border border-border bg-card p-6 shadow-soft">
-          <h3 className="text-xl font-extrabold">أرسل لنا رسالة</h3>
           <p className="text-sm text-muted-foreground">سيتم فتح واتساب بعد الإرسال لتأكيد الطلب.</p>
 
           <Field label="الاسم" name="name" required maxLength={100} placeholder="اسمك الكريم" />
@@ -302,16 +295,6 @@ function SocialButton({ href, label, children }: { href: string; label: string; 
   );
 }
 
-// ------------------------- Section heading -------------------------
-function SectionHeading({ eyebrow, title }: { eyebrow: string; title: string }) {
-  return (
-    <div className="text-center">
-      <div className="text-sm font-bold text-primary">{eyebrow}</div>
-      <h2 className="mt-2 text-3xl font-extrabold sm:text-4xl">{title}</h2>
-      <div className="mx-auto mt-3 h-1 w-16 rounded-full bg-primary/60" />
-    </div>
-  );
-}
 
 // ------------------------- Footer -------------------------
 function Footer() {
