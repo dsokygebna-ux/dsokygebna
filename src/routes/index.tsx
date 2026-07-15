@@ -1,11 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import {
-  Phone, MapPin, Clock, Star, Send, Download,
+  Phone, MapPin, Star, Send, Download,
   Facebook, Instagram, Youtube, MessageCircle,
 } from "lucide-react";
 
-import logo from "@/assets/logo.png";
+import logoAsset from "@/assets/logo.png.asset.json";
 import hero from "@/assets/hero.jpg";
 import { siteConfig, waLink, telLink } from "@/config/site";
 
@@ -58,13 +58,14 @@ function Nav() {
 
   return (
     <header className="sticky top-0 z-40 border-b border-border/60 bg-background/80 backdrop-blur-md">
-      <div className="mx-auto grid max-w-6xl grid-cols-[minmax(0,1fr)_auto] items-center gap-3 px-4 py-3 sm:flex sm:justify-between">
-        <a href="#top" className="flex min-w-0 items-center gap-3">
-          <img src={logo} alt="شعار الدسوقي" width={44} height={44} className="h-11 w-11 shrink-0 rounded-full bg-secondary object-contain p-1" />
-          <div className="min-w-0">
-            <div className="truncate text-base font-extrabold sm:text-lg">{siteConfig.brand.name}</div>
-            <div className="hidden text-xs text-muted-foreground sm:block">{siteConfig.brand.tagline}</div>
-          </div>
+      <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
+        <a href="#top" className="flex items-center gap-3">
+          <img
+            src={logoAsset.url}
+            alt="شعار الدسوقي"
+            width={56} height={56}
+            className="h-14 w-14 shrink-0 rounded-full object-contain"
+          />
         </a>
         <nav className="hidden items-center gap-6 text-sm font-semibold md:flex">
           <a href="#products" className="hover:text-primary">المنتجات</a>
@@ -93,9 +94,6 @@ function Hero() {
           <span className="inline-flex items-center gap-2 rounded-full bg-white/70 px-3 py-1 text-xs font-bold text-primary shadow-sm">
             طازج يومياً من مزارعنا
           </span>
-          <h1 className="mt-4 text-3xl font-extrabold leading-tight sm:text-4xl md:text-5xl">
-            {siteConfig.brand.name}
-          </h1>
           <p className="mt-4 max-w-lg text-base leading-relaxed text-muted-foreground sm:text-lg">
             {siteConfig.brand.welcome}
           </p>
@@ -144,24 +142,19 @@ function Products() {
           >
             <div className="aspect-square overflow-hidden bg-secondary">
               <img
-                src={p.image} alt={p.name}
+                src={p.image} alt="منتج من منتجات الألبان"
                 width={1024} height={1024} loading="lazy"
                 className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
               />
             </div>
-            <div className="flex flex-1 flex-col gap-3 p-5">
-              <h3 className="text-xl font-extrabold">{p.name}</h3>
-              <p className="flex-1 text-sm leading-relaxed text-muted-foreground">{p.description}</p>
-              <div className="flex items-center justify-between pt-2">
-                <span className="text-lg font-extrabold text-primary">{p.price}</span>
-                <a
-                  href={waLink(siteConfig.whatsapp.primary, `أرغب في طلب ${p.name}`)}
-                  target="_blank" rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 rounded-full bg-[var(--color-whatsapp)] px-4 py-2 text-sm font-bold text-white shadow-soft transition hover:opacity-90"
-                >
-                  <MessageCircle className="h-4 w-4" /> اطلب واتساب
-                </a>
-              </div>
+            <div className="flex items-center justify-center p-5">
+              <a
+                href={waLink(siteConfig.whatsapp.primary, "أرغب في الطلب")}
+                target="_blank" rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-full bg-[var(--color-whatsapp)] px-6 py-3 text-sm font-bold text-white shadow-soft transition hover:opacity-90"
+              >
+                <MessageCircle className="h-4 w-4" /> اطلب واتساب
+              </a>
             </div>
           </article>
         ))}
@@ -189,7 +182,6 @@ function Reviews() {
                 ))}
               </div>
               <p className="mt-4 leading-relaxed text-foreground">"{r.text}"</p>
-              <div className="mt-4 text-sm font-bold text-muted-foreground">— {r.name}</div>
             </div>
           ))}
         </div>
@@ -234,20 +226,6 @@ function ContactSection() {
           <div className="flex items-start gap-3 rounded-2xl bg-secondary/60 p-4">
             <MapPin className="mt-1 h-5 w-5 shrink-0 text-primary" />
             <div className="text-sm leading-relaxed">{siteConfig.location.address}</div>
-          </div>
-
-          <div className="rounded-2xl bg-secondary/60 p-4">
-            <div className="mb-3 flex items-center gap-2 font-bold">
-              <Clock className="h-5 w-5 text-primary" /> ساعات العمل
-            </div>
-            <ul className="space-y-1.5 text-sm">
-              {siteConfig.hours.map((h) => (
-                <li key={h.day} className="flex justify-between gap-3">
-                  <span className="text-muted-foreground">{h.day}</span>
-                  <span className="font-semibold">{h.time}</span>
-                </li>
-              ))}
-            </ul>
           </div>
 
           <div className="flex flex-wrap gap-2">
@@ -341,8 +319,7 @@ function Footer() {
     <footer className="border-t border-border bg-secondary/40">
       <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 px-4 py-6 text-sm text-muted-foreground sm:flex-row">
         <div className="flex items-center gap-2">
-          <img src={logo} alt="" width={28} height={28} className="h-7 w-7" />
-          <span className="font-bold text-foreground">{siteConfig.brand.name}</span>
+          <img src={logoAsset.url} alt="" width={28} height={28} className="h-7 w-7" />
         </div>
         <div>© {new Date().getFullYear()} جميع الحقوق محفوظة.</div>
       </div>

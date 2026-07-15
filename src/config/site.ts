@@ -1,7 +1,7 @@
 // =============================================================================
-// إعدادات الموقع - عدّل هذا الملف فقط لتحديث الأرقام والروابط والأسعار
-// Site configuration — edit this single file to update all contact info,
-// social links, product prices, WhatsApp numbers, and map location.
+// إعدادات الموقع - عدّل هذا الملف فقط لتحديث الأرقام والروابط
+// Site configuration — edit this single file to update contact info,
+// social links, WhatsApp numbers, and map location.
 // =============================================================================
 
 import cheeseImg from "@/assets/product-cheese.jpg";
@@ -45,54 +45,24 @@ export const siteConfig = {
     mapLink: "https://maps.google.com/?q=Desouk,Egypt",
   },
 
-  // ---------- ساعات العمل ----------
-  hours: [
-    { day: "السبت - الخميس", time: "٧:٠٠ ص - ١٠:٠٠ م" },
-    { day: "الجمعة", time: "٢:٠٠ م - ١٠:٠٠ م" },
-  ],
-
-  // ---------- المنتجات (الأسعار قابلة للتعديل) ----------
+  // ---------- المنتجات (صور فقط) ----------
   products: [
-    {
-      id: "qarish",
-      name: "الجبنة القريش",
-      description:
-        "جبنة قريش طازجة قليلة الدسم، غنية بالبروتين ومصنوعة يدوياً بطريقة تقليدية.",
-      price: "٦٠ ج.م / كجم",
-      image: cheeseImg,
-    },
-    {
-      id: "butter",
-      name: "الزبدة الجاموسي",
-      description:
-        "زبدة جاموسي طبيعية بلون ذهبي وطعم غني، خالية من أي إضافات.",
-      price: "٣٥٠ ج.م / كجم",
-      image: butterImg,
-    },
-    {
-      id: "cream",
-      name: "القشطة الجاموسي",
-      description:
-        "قشطة جاموسي كثيفة وطازجة، مثالية للحلويات ووجبة الإفطار.",
-      price: "٢٨٠ ج.م / كجم",
-      image: creamImg,
-    },
+    { id: "cheese", image: cheeseImg },
+    { id: "butter", image: butterImg },
+    { id: "cream", image: creamImg },
   ],
 
   // ---------- آراء العملاء ----------
   reviews: [
     {
-      name: "أم أحمد",
       text: "أفضل جبنة قريش جربتها، طعم بيتي أصيل وطازج دائماً.",
       rating: 5,
     },
     {
-      name: "محمد السيد",
       text: "الزبدة والقشطة على مستوى عالي جداً، والتوصيل سريع.",
       rating: 5,
     },
     {
-      name: "سارة إبراهيم",
       text: "منتجات نظيفة وطبيعية، أطلب منهم بشكل منتظم لعائلتي.",
       rating: 5,
     },
