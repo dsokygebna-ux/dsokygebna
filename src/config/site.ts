@@ -5,7 +5,7 @@
 // =============================================================================
 
 import cheeseImg from "@/assets/product-cheese.jpg";
-import butterImg from "@/assets/product-butter.jpg.asset.json";
+import butterImgAsset from "@/assets/product-butter.jpg.asset.json";
 import creamImg from "@/assets/product-cream.jpg";
 
 export const siteConfig = {
