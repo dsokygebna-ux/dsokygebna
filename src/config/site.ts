@@ -5,7 +5,7 @@
 // =============================================================================
 
 import cheeseImg from "@/assets/product-cheese.jpg";
-import butterImg from "@/assets/product-butter.jpg";
+import butterImgAsset from "@/assets/product-butter.jpg.asset.json";
 import creamImg from "@/assets/product-cream.jpg";
 
 export const siteConfig = {
@@ -48,7 +48,7 @@ export const siteConfig = {
   // ---------- المنتجات (صور + أسماء) ----------
   products: [
     { id: "cheese", image: cheeseImg, label: "جبنه قريش" },
-    { id: "butter", image: butterImg, label: "زبده جاموسي" },
+    { id: "butter", image: butterImgAsset.url, label: "زبده جاموسي" },
     { id: "cream", image: creamImg, label: "قشطه جاموسي" },
   ],
 
