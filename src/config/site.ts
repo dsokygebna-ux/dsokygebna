@@ -48,7 +48,7 @@ export const siteConfig = {
   // ---------- المنتجات (صور + أسماء) ----------
   products: [
     { id: "cheese", image: cheeseImg, label: "جبنه قريش" },
-    { id: "butter", image: butterImg, label: "زبده جاموسي" },
+    { id: "butter", image: butterImgAsset.url, label: "زبده جاموسي" },
     { id: "cream", image: creamImg, label: "قشطه جاموسي" },
   ],
 
