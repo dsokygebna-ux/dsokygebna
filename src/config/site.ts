@@ -45,11 +45,11 @@ export const siteConfig = {
     mapLink: "https://maps.google.com/?q=Desouk,Egypt",
   },
 
-  // ---------- المنتجات (صور فقط) ----------
+  // ---------- المنتجات (صور + أسماء) ----------
   products: [
-    { id: "cheese", image: cheeseImg },
-    { id: "butter", image: butterImg },
-    { id: "cream", image: creamImg },
+    { id: "cheese", image: cheeseImg, label: "جبنه قريش" },
+    { id: "butter", image: butterImg, label: "زبده جاموسي" },
+    { id: "cream", image: creamImg, label: "قشطه جاموسي" },
   ],
 
   // ---------- آراء العملاء ----------
