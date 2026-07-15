@@ -4,7 +4,7 @@
 // social links, WhatsApp numbers, and map location.
 // =============================================================================
 
-import cheeseImg from "@/assets/product-cheese.jpg";
+import cheeseImgAsset from "@/assets/product-cheese.jpg.asset.json";
 import butterImgAsset from "@/assets/product-butter.jpg.asset.json";
 import creamImg from "@/assets/product-cream.jpg";
 
@@ -47,7 +47,7 @@ export const siteConfig = {
 
   // ---------- المنتجات (صور + أسماء) ----------
   products: [
-    { id: "cheese", image: cheeseImg, label: "جبنه قريش" },
+    { id: "cheese", image: cheeseImgAsset.url, label: "جبنه قريش" },
     { id: "butter", image: butterImgAsset.url, label: "زبده جاموسي" },
     { id: "cream", image: creamImg, label: "قشطه جاموسي" },
   ],
