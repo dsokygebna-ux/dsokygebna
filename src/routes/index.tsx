@@ -63,8 +63,8 @@ function Nav() {
           <img
             src={logoAsset.url}
             alt="شعار الدسوقي"
-            width={56} height={56}
-            className="h-14 w-14 shrink-0 rounded-full object-contain"
+            width={72} height={72}
+            className="h-[4.5rem] w-[4.5rem] shrink-0 object-contain"
           />
         </a>
         <nav className="hidden items-center gap-6 text-sm font-semibold md:flex">
