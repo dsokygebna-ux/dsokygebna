@@ -42,10 +42,14 @@ function Nav() {
   const [installed, setInstalled] = useState(false);
 
   useEffect(() => {
-    const handler = (e: Event) => { e.preventDefault(); setInstallEvent(e); };
-    window.addEventListener("beforeinstallprompt", handler);
-    window.addEventListener("appinstalled", () => setInstalled(true));
-    return () => window.removeEventListener("beforeinstallprompt", handler);
+    const onPrompt = (e: Event) => { e.preventDefault(); setInstallEvent(e); };
+    const onInstalled = () => { setInstalled(true); setInstallEvent(null); };
+    window.addEventListener("beforeinstallprompt", onPrompt);
+    window.addEventListener("appinstalled", onInstalled);
+    return () => {
+      window.removeEventListener("beforeinstallprompt", onPrompt);
+      window.removeEventListener("appinstalled", onInstalled);
+    };
   }, []);
 
   const handleInstall = async () => {
