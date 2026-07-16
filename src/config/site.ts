@@ -20,13 +20,13 @@ export const siteConfig = {
   // ---------- أرقام الواتساب (المصر: +20) ----------
   // كل ضغطة تفتح واتساب مباشرة
   whatsapp: {
-    primary: "201091882075",   // 01091882075
-    secondary: "201091883015", // 01091883015
+    primary: "201091883015",   // 01091883015
+    secondary: "201091882075", // 01091882075
     defaultMessage: "السلام عليكم، أرغب في الاستفسار عن منتجات الألبان.",
   },
 
   // ---------- الهاتف ----------
-  phones: ["01091882075", "01091883015"],
+  phones: ["01091883015", "01091882075"],
 
   // ---------- روابط التواصل الاجتماعي ----------
   social: {
@@ -38,11 +38,10 @@ export const siteConfig = {
 
   // ---------- الموقع الجغرافي ----------
   location: {
-    address: "شارع الجمهورية، مدينة الدسوق، محافظة كفر الشيخ",
-    // ضع رابط تضمين خرائط جوجل (embed src) هنا
+    address: "موقعنا على خرائط جوجل",
     mapEmbed:
-      "https://www.google.com/maps?q=Desouk,Egypt&output=embed",
-    mapLink: "https://maps.google.com/?q=Desouk,Egypt",
+      "https://www.google.com/maps?q=30.892689,30.660649&hl=ar&z=17&output=embed",
+    mapLink: "https://maps.app.goo.gl/7i1DcLmDY7Gdcbfv8",
   },
 
   // ---------- المنتجات (صور + أسماء) ----------
