@@ -208,20 +208,21 @@ function Reviews() {
 
 // ------------------------- Contact -------------------------
 function ContactSection() {
-  const [status, setStatus] = useState<"idle" | "sent">("idle");
-
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const fd = new FormData(e.currentTarget);
+    const form = e.currentTarget;
+    const fd = new FormData(form);
     const name = String(fd.get("name") || "").trim().slice(0, 100);
     const phone = String(fd.get("phone") || "").trim().slice(0, 30);
     const message = String(fd.get("message") || "").trim().slice(0, 1000);
-    if (!name || !message) return;
+    if (!name || !message) {
+      toast.error("من فضلك اكتب اسمك ورسالتك.");
+      return;
+    }
     const text = `اسم: ${name}%0Aهاتف: ${phone}%0A%0A${encodeURIComponent(message)}`;
     window.open(`https://wa.me/${siteConfig.whatsapp.primary}?text=${text}`, "_blank");
-    setStatus("sent");
-    e.currentTarget.reset();
-    setTimeout(() => setStatus("idle"), 3000);
+    toast.success("تم الإرسال! جاري فتح واتساب…");
+    form.reset();
   };
 
   return (
