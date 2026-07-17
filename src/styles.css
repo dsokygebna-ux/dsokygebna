@@ -2,7 +2,7 @@
 @source "../src";
 @import "tw-animate-css";
 
-@custom-variant dark (&:is(.dark *));
+@custom-variant dark (&:where(.dark, .dark *));
 
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
@@ -71,6 +71,38 @@
 
   --whatsapp: oklch(0.68 0.17 145);
 }
+
+.dark {
+  --background: oklch(0.16 0.02 240);
+  --foreground: oklch(0.95 0.01 90);
+
+  --card: oklch(0.21 0.02 240);
+  --card-foreground: oklch(0.95 0.01 90);
+
+  --primary: oklch(0.72 0.11 235);
+  --primary-foreground: oklch(0.15 0.03 240);
+
+  --secondary: oklch(0.26 0.02 240);
+  --secondary-foreground: oklch(0.95 0.01 90);
+
+  --muted: oklch(0.24 0.02 240);
+  --muted-foreground: oklch(0.72 0.02 240);
+
+  --accent: oklch(0.32 0.05 230);
+  --accent-foreground: oklch(0.95 0.01 90);
+
+  --cream: oklch(0.24 0.02 85);
+  --milk: oklch(0.2 0.01 90);
+  --sky-soft: oklch(0.32 0.05 230);
+
+  --border: oklch(0.32 0.02 240);
+  --ring: oklch(0.72 0.11 235);
+
+  --whatsapp: oklch(0.68 0.17 145);
+}
+
+html { color-scheme: light dark; }
+html.dark { color-scheme: dark; }
 
 @layer base {
   * { border-color: var(--color-border); }
