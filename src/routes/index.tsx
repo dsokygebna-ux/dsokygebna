@@ -40,6 +40,8 @@ function HomePage() {
       <ContactSection />
       <Footer />
       <FloatingWhatsApp />
+      <BackToTop />
+      <Toaster position="top-center" richColors closeButton dir="rtl" />
     </div>
   );
 }
