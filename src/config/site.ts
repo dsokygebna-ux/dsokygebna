@@ -30,9 +30,9 @@ export const siteConfig = {
 
   // ---------- روابط التواصل الاجتماعي ----------
   social: {
-    facebook: "https://facebook.com/",
+    facebook: "https://www.facebook.com/share/1LvgMan7qZ/",
     instagram: "https://instagram.com/",
-    tiktok: "https://www.tiktok.com/",
+    tiktok: "https://www.tiktok.com/@asername1237",
     youtube: "https://youtube.com/",
   },
 
