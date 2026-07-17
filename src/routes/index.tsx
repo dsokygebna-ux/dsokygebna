@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
+import { Toaster, toast } from "sonner";
 import {
   Phone, MapPin, Star, Send, Download,
   Facebook, Instagram, Youtube, MessageCircle,
@@ -8,9 +9,16 @@ import {
 import logoAsset from "@/assets/logo.png.asset.json";
 import hero from "@/assets/hero.jpg";
 import { siteConfig, waLink, telLink } from "@/config/site";
+import { ThemeToggle } from "@/components/ThemeToggle";
+import { BackToTop } from "@/components/BackToTop";
 
 export const Route = createFileRoute("/")({
   component: HomePage,
+  head: () => ({
+    links: [
+      { rel: "preload", as: "image", href: hero, fetchpriority: "high" } as any,
+    ],
+  }),
 });
 
 // TikTok icon (lucide has no TikTok yet)
@@ -32,6 +40,8 @@ function HomePage() {
       <ContactSection />
       <Footer />
       <FloatingWhatsApp />
+      <BackToTop />
+      <Toaster position="top-center" richColors closeButton dir="rtl" />
     </div>
   );
 }
@@ -76,14 +86,17 @@ function Nav() {
           <a href="#reviews" className="hover:text-primary">آراء العملاء</a>
           <a href="#contact" className="hover:text-primary">تواصل معنا</a>
         </nav>
-        {installEvent && !installed && (
-          <button
-            onClick={handleInstall}
-            className="hidden items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-bold text-primary-foreground shadow-soft transition hover:opacity-90 sm:inline-flex"
-          >
-            <Download className="h-4 w-4" /> تثبيت التطبيق
-          </button>
-        )}
+        <div className="flex items-center gap-2">
+          {installEvent && !installed && (
+            <button
+              onClick={handleInstall}
+              className="hidden items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-bold text-primary-foreground shadow-soft transition hover:opacity-90 sm:inline-flex"
+            >
+              <Download className="h-4 w-4" /> تثبيت التطبيق
+            </button>
+          )}
+          <ThemeToggle />
+        </div>
       </div>
     </header>
   );
@@ -120,8 +133,11 @@ function Hero() {
               src={hero}
               alt="منتجات ألبان طازجة"
               width={1600} height={900}
+              fetchPriority="high"
+              decoding="async"
               className="h-full w-full object-cover"
             />
+
           </div>
         </div>
       </div>
@@ -192,20 +208,21 @@ function Reviews() {
 
 // ------------------------- Contact -------------------------
 function ContactSection() {
-  const [status, setStatus] = useState<"idle" | "sent">("idle");
-
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const fd = new FormData(e.currentTarget);
+    const form = e.currentTarget;
+    const fd = new FormData(form);
     const name = String(fd.get("name") || "").trim().slice(0, 100);
     const phone = String(fd.get("phone") || "").trim().slice(0, 30);
     const message = String(fd.get("message") || "").trim().slice(0, 1000);
-    if (!name || !message) return;
+    if (!name || !message) {
+      toast.error("من فضلك اكتب اسمك ورسالتك.");
+      return;
+    }
     const text = `اسم: ${name}%0Aهاتف: ${phone}%0A%0A${encodeURIComponent(message)}`;
     window.open(`https://wa.me/${siteConfig.whatsapp.primary}?text=${text}`, "_blank");
-    setStatus("sent");
-    e.currentTarget.reset();
-    setTimeout(() => setStatus("idle"), 3000);
+    toast.success("تم الإرسال! جاري فتح واتساب…");
+    form.reset();
   };
 
   return (
@@ -265,9 +282,6 @@ function ContactSection() {
           >
             <Send className="h-4 w-4" /> إرسال
           </button>
-          {status === "sent" && (
-            <div className="text-sm font-semibold text-[var(--color-whatsapp)]">تم الإرسال! جاري فتح واتساب…</div>
-          )}
         </form>
       </div>
     </section>
