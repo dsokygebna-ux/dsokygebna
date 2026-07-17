@@ -86,14 +86,17 @@ function Nav() {
           <a href="#reviews" className="hover:text-primary">آراء العملاء</a>
           <a href="#contact" className="hover:text-primary">تواصل معنا</a>
         </nav>
-        {installEvent && !installed && (
-          <button
-            onClick={handleInstall}
-            className="hidden items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-bold text-primary-foreground shadow-soft transition hover:opacity-90 sm:inline-flex"
-          >
-            <Download className="h-4 w-4" /> تثبيت التطبيق
-          </button>
-        )}
+        <div className="flex items-center gap-2">
+          {installEvent && !installed && (
+            <button
+              onClick={handleInstall}
+              className="hidden items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-bold text-primary-foreground shadow-soft transition hover:opacity-90 sm:inline-flex"
+            >
+              <Download className="h-4 w-4" /> تثبيت التطبيق
+            </button>
+          )}
+          <ThemeToggle />
+        </div>
       </div>
     </header>
   );
