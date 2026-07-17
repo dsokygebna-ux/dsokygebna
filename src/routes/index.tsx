@@ -282,9 +282,6 @@ function ContactSection() {
           >
             <Send className="h-4 w-4" /> إرسال
           </button>
-          {status === "sent" && (
-            <div className="text-sm font-semibold text-[var(--color-whatsapp)]">تم الإرسال! جاري فتح واتساب…</div>
-          )}
         </form>
       </div>
     </section>
