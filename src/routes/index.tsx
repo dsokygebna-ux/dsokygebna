@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
+import { Toaster, toast } from "sonner";
 import {
   Phone, MapPin, Star, Send, Download,
   Facebook, Instagram, Youtube, MessageCircle,
@@ -8,9 +9,16 @@ import {
 import logoAsset from "@/assets/logo.png.asset.json";
 import hero from "@/assets/hero.jpg";
 import { siteConfig, waLink, telLink } from "@/config/site";
+import { ThemeToggle } from "@/components/ThemeToggle";
+import { BackToTop } from "@/components/BackToTop";
 
 export const Route = createFileRoute("/")({
   component: HomePage,
+  head: () => ({
+    links: [
+      { rel: "preload", as: "image", href: hero, fetchpriority: "high" } as any,
+    ],
+  }),
 });
 
 // TikTok icon (lucide has no TikTok yet)
