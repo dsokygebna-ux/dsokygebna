@@ -133,8 +133,11 @@ function Hero() {
               src={hero}
               alt="منتجات ألبان طازجة"
               width={1600} height={900}
+              fetchPriority="high"
+              decoding="async"
               className="h-full w-full object-cover"
             />
+
           </div>
         </div>
       </div>
