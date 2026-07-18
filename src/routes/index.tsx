@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Toaster, toast } from "sonner";
 import {
   Phone, MapPin, Star, Send,
