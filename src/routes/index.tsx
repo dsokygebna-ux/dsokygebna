@@ -90,14 +90,6 @@ function Nav() {
           <a href="#contact" className="hover:text-primary">تواصل معنا</a>
         </nav>
         <div className="flex items-center gap-2">
-          {installEvent && !installed && (
-            <button
-              onClick={handleInstall}
-              className="hidden items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-bold text-primary-foreground shadow-soft transition hover:opacity-90 sm:inline-flex"
-            >
-              <Download className="h-4 w-4" /> تثبيت التطبيق
-            </button>
-          )}
           <ThemeToggle />
         </div>
       </div>
@@ -105,8 +97,23 @@ function Nav() {
   );
 }
 
-// ------------------------- Hero -------------------------
-function Hero() {
+// Toast the user when the connection drops or returns.
+function OnlineStatusToaster() {
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const onOnline = () => toast.success("عاد الاتصال بالإنترنت.");
+    const onOffline = () =>
+      toast.error("أنت غير متصل حالياً. تصفح المحتوى المخزن مؤقتاً.");
+    window.addEventListener("online", onOnline);
+    window.addEventListener("offline", onOffline);
+    return () => {
+      window.removeEventListener("online", onOnline);
+      window.removeEventListener("offline", onOffline);
+    };
+  }, []);
+  return null;
+}
+
   return (
     <section id="top" className="hero-bg relative overflow-hidden">
       <div className="mx-auto grid max-w-6xl gap-10 px-4 py-14 md:grid-cols-2 md:items-center md:py-20">
