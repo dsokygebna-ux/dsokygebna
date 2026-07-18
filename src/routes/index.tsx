@@ -41,7 +41,9 @@ function HomePage() {
       <ContactSection />
       <Footer />
       <FloatingWhatsApp />
+      <ChatWidget />
       <BackToTop />
+      <OnlineStatusToaster />
       <Toaster position="top-center" richColors closeButton dir="rtl" />
     </div>
   );
