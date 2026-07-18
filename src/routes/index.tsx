@@ -1,8 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Toaster, toast } from "sonner";
 import {
-  Phone, MapPin, Star, Send, Download,
+  Phone, MapPin, Star, Send,
   Facebook, Instagram, Youtube, MessageCircle,
 } from "lucide-react";
 
@@ -11,6 +11,7 @@ import hero from "@/assets/hero.jpg";
 import { siteConfig, waLink, telLink } from "@/config/site";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { BackToTop } from "@/components/BackToTop";
+import { ChatWidget } from "@/components/ChatWidget";
 
 export const Route = createFileRoute("/")({
   component: HomePage,
@@ -40,7 +41,9 @@ function HomePage() {
       <ContactSection />
       <Footer />
       <FloatingWhatsApp />
+      <ChatWidget />
       <BackToTop />
+      <OnlineStatusToaster />
       <Toaster position="top-center" richColors closeButton dir="rtl" />
     </div>
   );
@@ -48,27 +51,6 @@ function HomePage() {
 
 // ------------------------- Nav -------------------------
 function Nav() {
-  const [installEvent, setInstallEvent] = useState<any>(null);
-  const [installed, setInstalled] = useState(false);
-
-  useEffect(() => {
-    const onPrompt = (e: Event) => { e.preventDefault(); setInstallEvent(e); };
-    const onInstalled = () => { setInstalled(true); setInstallEvent(null); };
-    window.addEventListener("beforeinstallprompt", onPrompt);
-    window.addEventListener("appinstalled", onInstalled);
-    return () => {
-      window.removeEventListener("beforeinstallprompt", onPrompt);
-      window.removeEventListener("appinstalled", onInstalled);
-    };
-  }, []);
-
-  const handleInstall = async () => {
-    if (!installEvent) return;
-    installEvent.prompt();
-    const { outcome } = await installEvent.userChoice;
-    if (outcome === "accepted") setInstalled(true);
-    setInstallEvent(null);
-  };
 
   return (
     <header className="sticky top-0 z-40 border-b border-border/60 bg-background/80 backdrop-blur-md">
@@ -87,19 +69,28 @@ function Nav() {
           <a href="#contact" className="hover:text-primary">تواصل معنا</a>
         </nav>
         <div className="flex items-center gap-2">
-          {installEvent && !installed && (
-            <button
-              onClick={handleInstall}
-              className="hidden items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-bold text-primary-foreground shadow-soft transition hover:opacity-90 sm:inline-flex"
-            >
-              <Download className="h-4 w-4" /> تثبيت التطبيق
-            </button>
-          )}
           <ThemeToggle />
         </div>
       </div>
     </header>
   );
+}
+
+// Toast the user when the connection drops or returns.
+function OnlineStatusToaster() {
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const onOnline = () => toast.success("عاد الاتصال بالإنترنت.");
+    const onOffline = () =>
+      toast.error("أنت غير متصل حالياً. تصفح المحتوى المخزن مؤقتاً.");
+    window.addEventListener("online", onOnline);
+    window.addEventListener("offline", onOffline);
+    return () => {
+      window.removeEventListener("online", onOnline);
+      window.removeEventListener("offline", onOffline);
+    };
+  }, []);
+  return null;
 }
 
 // ------------------------- Hero -------------------------

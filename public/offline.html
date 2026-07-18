@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <title>غير متصل | الدسوقي لمنتجات الألبان</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#7cc4e6" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <style>
+      *,*::before,*::after{box-sizing:border-box}
+      html,body{margin:0;padding:0;font-family:"Tajawal","Cairo",system-ui,-apple-system,"Segoe UI",Arial,sans-serif;background:linear-gradient(160deg,#eaf6fc 0%,#fbfaf6 55%,#f4ecdc 100%);color:#1c2b36;min-height:100dvh}
+      body{display:grid;place-items:center;padding:1.5rem}
+      .card{max-width:32rem;width:100%;text-align:center;background:rgba(255,255,255,.7);backdrop-filter:blur(18px) saturate(140%);border:1px solid rgba(255,255,255,.6);border-radius:2rem;padding:2.25rem 1.75rem;box-shadow:0 20px 60px -30px rgba(20,60,90,.35)}
+      .icon{width:120px;height:120px;margin:0 auto 1.25rem;display:grid;place-items:center;border-radius:50%;background:linear-gradient(140deg,#e3f3fb,#f6ede0);box-shadow:inset 0 0 0 6px rgba(255,255,255,.6),0 12px 30px -12px rgba(30,100,150,.25);animation:float 3.5s ease-in-out infinite}
+      @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+      svg{width:68px;height:68px;color:#3aa0c9}
+      h1{margin:.25rem 0 .5rem;font-size:1.5rem;font-weight:800}
+      p{margin:.35rem 0;color:#4a5b68;line-height:1.75}
+      .actions{margin-top:1.5rem;display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap}
+      button,a.btn{font:inherit;font-weight:700;padding:.75rem 1.4rem;border-radius:999px;border:1px solid transparent;cursor:pointer;text-decoration:none;transition:transform .15s ease,opacity .15s ease}
+      .primary{background:linear-gradient(135deg,#3aa0c9,#7cc4e6);color:#fff;box-shadow:0 8px 22px -10px rgba(60,140,180,.6)}
+      .primary:hover{transform:translateY(-1px);opacity:.95}
+      .ghost{background:#fff;color:#1c2b36;border-color:#e2e8ee}
+      .status{margin-top:1rem;font-size:.85rem;color:#647684}
+      .dot{display:inline-block;width:.6rem;height:.6rem;border-radius:50%;background:#d0555a;margin-inline-end:.4rem;animation:pulse 1.6s ease-in-out infinite}
+      @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+    </style>
+  </head>
+  <body>
+    <main class="card" role="main">
+      <div class="icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M1 1l22 22" />
+          <path d="M16.72 11.06A10.94 10.94 0 0 1 19 12.55" />
+          <path d="M5 12.55a10.94 10.94 0 0 1 5.17-2.39" />
+          <path d="M10.71 5.05A16 16 0 0 1 22.58 9" />
+          <path d="M1.42 9a15.91 15.91 0 0 1 4.7-2.88" />
+          <path d="M8.53 16.11a6 6 0 0 1 6.95 0" />
+          <circle cx="12" cy="20" r="1" />
+        </svg>
+      </div>
+      <h1>أنت غير متصل بالإنترنت حالياً</h1>
+      <p>يرجى التحقق من اتصالك بالإنترنت.</p>
+      <p>الصفحات التي زرتها سابقاً لا تزال متاحة للتصفح.</p>
+      <div class="actions">
+        <button class="primary" onclick="location.reload()">إعادة المحاولة</button>
+        <a class="ghost btn" href="/">الصفحة الرئيسية</a>
+      </div>
+      <div class="status"><span class="dot"></span><span id="s">غير متصل</span></div>
+    </main>
+    <script>
+      const s=document.getElementById("s");
+      function upd(){s.textContent=navigator.onLine?"عاد الاتصال — يمكنك المحاولة الآن":"غير متصل";}
+      window.addEventListener("online",()=>{upd();setTimeout(()=>location.reload(),600)});
+      window.addEventListener("offline",upd);
+    </script>
+  </body>
+</html>
