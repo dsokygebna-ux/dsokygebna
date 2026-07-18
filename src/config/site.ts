@@ -37,11 +37,12 @@ export const siteConfig = {
   },
 
   // ---------- الموقع الجغرافي ----------
+  // 30°53'32.7"N 30°39'38.1"E  →  30.892417, 30.660583
   location: {
-    address: "موقعنا على خرائط جوجل",
+    address: "30°53'32.7\"N 30°39'38.1\"E",
     mapEmbed:
-      "https://www.google.com/maps?q=30.892689,30.660649&hl=ar&z=17&output=embed",
-    mapLink: "https://maps.app.goo.gl/7i1DcLmDY7Gdcbfv8",
+      "https://www.google.com/maps?q=30.892417,30.660583&hl=ar&z=18&output=embed",
+    mapLink: "https://www.google.com/maps?q=30.892417,30.660583",
   },
 
   // ---------- المنتجات (صور + أسماء) ----------
