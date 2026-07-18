@@ -51,27 +51,6 @@ function HomePage() {
 
 // ------------------------- Nav -------------------------
 function Nav() {
-  const [installEvent, setInstallEvent] = useState<any>(null);
-  const [installed, setInstalled] = useState(false);
-
-  useEffect(() => {
-    const onPrompt = (e: Event) => { e.preventDefault(); setInstallEvent(e); };
-    const onInstalled = () => { setInstalled(true); setInstallEvent(null); };
-    window.addEventListener("beforeinstallprompt", onPrompt);
-    window.addEventListener("appinstalled", onInstalled);
-    return () => {
-      window.removeEventListener("beforeinstallprompt", onPrompt);
-      window.removeEventListener("appinstalled", onInstalled);
-    };
-  }, []);
-
-  const handleInstall = async () => {
-    if (!installEvent) return;
-    installEvent.prompt();
-    const { outcome } = await installEvent.userChoice;
-    if (outcome === "accepted") setInstalled(true);
-    setInstallEvent(null);
-  };
 
   return (
     <header className="sticky top-0 z-40 border-b border-border/60 bg-background/80 backdrop-blur-md">
