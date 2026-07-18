@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Toaster, toast } from "sonner";
 import {
-  Phone, MapPin, Star, Send, Download,
+  Phone, MapPin, Star, Send,
   Facebook, Instagram, Youtube, MessageCircle,
 } from "lucide-react";
 
@@ -11,6 +11,7 @@ import hero from "@/assets/hero.jpg";
 import { siteConfig, waLink, telLink } from "@/config/site";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { BackToTop } from "@/components/BackToTop";
+import { ChatWidget } from "@/components/ChatWidget";
 
 export const Route = createFileRoute("/")({
   component: HomePage,
