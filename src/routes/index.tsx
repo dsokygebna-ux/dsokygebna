@@ -93,6 +93,8 @@ function OnlineStatusToaster() {
   return null;
 }
 
+// ------------------------- Hero -------------------------
+function Hero() {
   return (
     <section id="top" className="hero-bg relative overflow-hidden">
       <div className="mx-auto grid max-w-6xl gap-10 px-4 py-14 md:grid-cols-2 md:items-center md:py-20">
