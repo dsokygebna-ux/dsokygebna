@@ -98,6 +98,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     ],
     scripts: [
       {
+        src: "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3422931052144106",
+        async: true,
+        crossOrigin: "anonymous",
+      },
+      {
         type: "application/ld+json",
         children: JSON.stringify({
           "@context": "https://schema.org",
@@ -108,7 +113,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           image: "https://dsokygebna.lovable.app/icon-512.png",
           telephone: "+201091883015",
           address: { "@type": "PostalAddress", addressCountry: "EG", addressLocality: "دسوق" },
-          geo: { "@type": "GeoCoordinates", latitude: 30.892689, longitude: 30.660649 },
+          geo: { "@type": "GeoCoordinates", latitude: 30.892417, longitude: 30.660583 },
           priceRange: "$$",
         }),
       },
