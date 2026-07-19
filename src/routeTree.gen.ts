@@ -10,7 +10,12 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as BenefitsRouteImport } from './routes/benefits'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as BenefitsIndexRouteImport } from './routes/benefits.index'
+import { Route as BenefitsCreamRouteImport } from './routes/benefits.cream'
+import { Route as BenefitsCheeseRouteImport } from './routes/benefits.cheese'
+import { Route as BenefitsButterRouteImport } from './routes/benefits.butter'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
@@ -18,10 +23,35 @@ const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BenefitsRoute = BenefitsRouteImport.update({
+  id: '/benefits',
+  path: '/benefits',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const BenefitsIndexRoute = BenefitsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => BenefitsRoute,
+} as any)
+const BenefitsCreamRoute = BenefitsCreamRouteImport.update({
+  id: '/cream',
+  path: '/cream',
+  getParentRoute: () => BenefitsRoute,
+} as any)
+const BenefitsCheeseRoute = BenefitsCheeseRouteImport.update({
+  id: '/cheese',
+  path: '/cheese',
+  getParentRoute: () => BenefitsRoute,
+} as any)
+const BenefitsButterRoute = BenefitsButterRouteImport.update({
+  id: '/butter',
+  path: '/butter',
+  getParentRoute: () => BenefitsRoute,
 } as any)
 const ApiChatRoute = ApiChatRouteImport.update({
   id: '/api/chat',
@@ -31,30 +61,69 @@ const ApiChatRoute = ApiChatRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/benefits': typeof BenefitsRouteWithChildren
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/api/chat': typeof ApiChatRoute
+  '/benefits/butter': typeof BenefitsButterRoute
+  '/benefits/cheese': typeof BenefitsCheeseRoute
+  '/benefits/cream': typeof BenefitsCreamRoute
+  '/benefits/': typeof BenefitsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/api/chat': typeof ApiChatRoute
+  '/benefits/butter': typeof BenefitsButterRoute
+  '/benefits/cheese': typeof BenefitsCheeseRoute
+  '/benefits/cream': typeof BenefitsCreamRoute
+  '/benefits': typeof BenefitsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/benefits': typeof BenefitsRouteWithChildren
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/api/chat': typeof ApiChatRoute
+  '/benefits/butter': typeof BenefitsButterRoute
+  '/benefits/cheese': typeof BenefitsCheeseRoute
+  '/benefits/cream': typeof BenefitsCreamRoute
+  '/benefits/': typeof BenefitsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/sitemap.xml' | '/api/chat'
+  fullPaths:
+    | '/'
+    | '/benefits'
+    | '/sitemap.xml'
+    | '/api/chat'
+    | '/benefits/butter'
+    | '/benefits/cheese'
+    | '/benefits/cream'
+    | '/benefits/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/sitemap.xml' | '/api/chat'
-  id: '__root__' | '/' | '/sitemap.xml' | '/api/chat'
+  to:
+    | '/'
+    | '/sitemap.xml'
+    | '/api/chat'
+    | '/benefits/butter'
+    | '/benefits/cheese'
+    | '/benefits/cream'
+    | '/benefits'
+  id:
+    | '__root__'
+    | '/'
+    | '/benefits'
+    | '/sitemap.xml'
+    | '/api/chat'
+    | '/benefits/butter'
+    | '/benefits/cheese'
+    | '/benefits/cream'
+    | '/benefits/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  BenefitsRoute: typeof BenefitsRouteWithChildren
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   ApiChatRoute: typeof ApiChatRoute
 }
@@ -68,12 +137,47 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SitemapDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/benefits': {
+      id: '/benefits'
+      path: '/benefits'
+      fullPath: '/benefits'
+      preLoaderRoute: typeof BenefitsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/benefits/': {
+      id: '/benefits/'
+      path: '/'
+      fullPath: '/benefits/'
+      preLoaderRoute: typeof BenefitsIndexRouteImport
+      parentRoute: typeof BenefitsRoute
+    }
+    '/benefits/cream': {
+      id: '/benefits/cream'
+      path: '/cream'
+      fullPath: '/benefits/cream'
+      preLoaderRoute: typeof BenefitsCreamRouteImport
+      parentRoute: typeof BenefitsRoute
+    }
+    '/benefits/cheese': {
+      id: '/benefits/cheese'
+      path: '/cheese'
+      fullPath: '/benefits/cheese'
+      preLoaderRoute: typeof BenefitsCheeseRouteImport
+      parentRoute: typeof BenefitsRoute
+    }
+    '/benefits/butter': {
+      id: '/benefits/butter'
+      path: '/butter'
+      fullPath: '/benefits/butter'
+      preLoaderRoute: typeof BenefitsButterRouteImport
+      parentRoute: typeof BenefitsRoute
     }
     '/api/chat': {
       id: '/api/chat'
@@ -85,8 +189,27 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface BenefitsRouteChildren {
+  BenefitsButterRoute: typeof BenefitsButterRoute
+  BenefitsCheeseRoute: typeof BenefitsCheeseRoute
+  BenefitsCreamRoute: typeof BenefitsCreamRoute
+  BenefitsIndexRoute: typeof BenefitsIndexRoute
+}
+
+const BenefitsRouteChildren: BenefitsRouteChildren = {
+  BenefitsButterRoute: BenefitsButterRoute,
+  BenefitsCheeseRoute: BenefitsCheeseRoute,
+  BenefitsCreamRoute: BenefitsCreamRoute,
+  BenefitsIndexRoute: BenefitsIndexRoute,
+}
+
+const BenefitsRouteWithChildren = BenefitsRoute._addFileChildren(
+  BenefitsRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  BenefitsRoute: BenefitsRouteWithChildren,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   ApiChatRoute: ApiChatRoute,
 }

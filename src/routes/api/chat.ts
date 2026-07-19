@@ -1,7 +1,4 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { streamText, type ModelMessage } from "ai";
-
-import { createLovableAiGatewayProvider } from "@/lib/ai-gateway.server";
 
 const SYSTEM_PROMPT = `أنت المساعد الرسمي لموقع "الدسوقي لمنتجات الألبان" — متجر مصري متخصص في منتجات الألبان الطازجة والطبيعية 100%.
 
@@ -24,19 +21,17 @@ const SYSTEM_PROMPT = `أنت المساعد الرسمي لموقع "الدسو
 
 type Body = { messages?: Array<{ role: "user" | "assistant"; content: string }> };
 
-// Very small in-memory rate limit per IP (best-effort on stateless workers).
+// Best-effort per-IP rate limit (stateless workers reset frequently).
 const hits = new Map<string, { count: number; ts: number }>();
 function rateLimit(ip: string) {
   const now = Date.now();
-  const win = 60_000;
-  const max = 20;
   const cur = hits.get(ip);
-  if (!cur || now - cur.ts > win) {
+  if (!cur || now - cur.ts > 60_000) {
     hits.set(ip, { count: 1, ts: now });
     return true;
   }
   cur.count += 1;
-  return cur.count <= max;
+  return cur.count <= 20;
 }
 
 export const Route = createFileRoute("/api/chat")({
@@ -48,13 +43,11 @@ export const Route = createFileRoute("/api/chat")({
             request.headers.get("cf-connecting-ip") ||
             request.headers.get("x-forwarded-for") ||
             "anon";
-          if (!rateLimit(ip)) {
-            return new Response("Too many requests", { status: 429 });
-          }
+          if (!rateLimit(ip)) return new Response("Too many requests", { status: 429 });
 
           const body = (await request.json()) as Body;
           const raw = Array.isArray(body.messages) ? body.messages : [];
-          const messages: ModelMessage[] = raw
+          const messages = raw
             .filter((m) => m && typeof m.content === "string" && m.content.trim())
             .slice(-12)
             .map((m) => ({
@@ -62,22 +55,70 @@ export const Route = createFileRoute("/api/chat")({
               content: m.content.slice(0, 2000),
             }));
 
-          if (messages.length === 0) {
-            return new Response("Missing messages", { status: 400 });
-          }
+          if (messages.length === 0) return new Response("Missing messages", { status: 400 });
 
-          const key = process.env.LOVABLE_API_KEY;
+          const key = process.env.OPENAI_API_KEY;
           if (!key) return new Response("AI not configured", { status: 500 });
 
-          const gateway = createLovableAiGatewayProvider(key);
-          const result = streamText({
-            model: gateway("google/gemini-3-flash-preview"),
-            system: SYSTEM_PROMPT,
-            messages,
+          const upstream = await fetch("https://api.openai.com/v1/chat/completions", {
+            method: "POST",
+            headers: {
+              "content-type": "application/json",
+              authorization: `Bearer ${key}`,
+            },
+            body: JSON.stringify({
+              model: "gpt-4o-mini",
+              stream: true,
+              temperature: 0.5,
+              messages: [{ role: "system", content: SYSTEM_PROMPT }, ...messages],
+            }),
           });
 
-          return result.toTextStreamResponse({
-            headers: { "Cache-Control": "no-store" },
+          if (!upstream.ok || !upstream.body) {
+            const errText = await upstream.text().catch(() => "");
+            console.error("OpenAI error", upstream.status, errText);
+            if (upstream.status === 429) return new Response("quota", { status: 402 });
+            return new Response("AI upstream error", { status: 502 });
+          }
+
+          // Convert OpenAI SSE → plain text stream of deltas.
+          const reader = upstream.body.getReader();
+          const decoder = new TextDecoder();
+          const encoder = new TextEncoder();
+          let buffer = "";
+
+          const stream = new ReadableStream<Uint8Array>({
+            async pull(controller) {
+              const { done, value } = await reader.read();
+              if (done) {
+                controller.close();
+                return;
+              }
+              buffer += decoder.decode(value, { stream: true });
+              const lines = buffer.split("\n");
+              buffer = lines.pop() ?? "";
+              for (const line of lines) {
+                const trimmed = line.trim();
+                if (!trimmed.startsWith("data:")) continue;
+                const data = trimmed.slice(5).trim();
+                if (!data || data === "[DONE]") continue;
+                try {
+                  const json = JSON.parse(data);
+                  const delta: string | undefined = json.choices?.[0]?.delta?.content;
+                  if (delta) controller.enqueue(encoder.encode(delta));
+                } catch {
+                  // ignore malformed chunk
+                }
+              }
+            },
+            cancel() { reader.cancel().catch(() => {}); },
+          });
+
+          return new Response(stream, {
+            headers: {
+              "content-type": "text/plain; charset=utf-8",
+              "cache-control": "no-store",
+            },
           });
         } catch (err) {
           console.error("chat route error", err);
