@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { Toaster, toast } from "sonner";
 import {
@@ -65,6 +65,7 @@ function Nav() {
         </a>
         <nav className="hidden items-center gap-6 text-sm font-semibold md:flex">
           <a href="#products" className="hover:text-primary">المنتجات</a>
+          <Link to="/benefits" className="hover:text-primary">الفوائد</Link>
           <a href="#reviews" className="hover:text-primary">آراء العملاء</a>
           <a href="#contact" className="hover:text-primary">تواصل معنا</a>
         </nav>
@@ -155,10 +156,16 @@ function Products() {
             </div>
             <div className="p-5 text-center">
               <h3 className="text-xl font-extrabold text-foreground">{p.label}</h3>
+              <Link
+                to={`/benefits/${p.id}` as "/benefits/cheese"}
+                className="mt-2 inline-block text-sm font-bold text-primary hover:underline"
+              >
+                اقرأ الفوائد الصحية →
+              </Link>
               <a
                 href={waLink(siteConfig.whatsapp.primary, `أرغب في طلب ${p.label}`)}
                 target="_blank" rel="noopener noreferrer"
-                className="mt-4 inline-flex items-center gap-2 rounded-full bg-[var(--color-whatsapp)] px-6 py-3 text-sm font-bold text-white shadow-soft transition hover:opacity-90"
+                className="mt-3 inline-flex items-center gap-2 rounded-full bg-[var(--color-whatsapp)] px-6 py-3 text-sm font-bold text-white shadow-soft transition hover:opacity-90"
               >
                 <MessageCircle className="h-4 w-4" /> اطلب واتساب
               </a>
