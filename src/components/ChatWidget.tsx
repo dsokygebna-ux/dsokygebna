@@ -1,20 +1,12 @@
 import { useEffect, useRef, useState } from "react";
-import { MessageCircle, Send, X, Facebook } from "lucide-react";
+import { MessageCircle, Send, X, Facebook, Square } from "lucide-react";
 import { siteConfig, waLink } from "@/config/site";
 
-const AUTO_REPLY = `👋 أهلاً وسهلاً بك في الدسوقي لمنتجات الألبان.
+const WELCOME = `👋 أهلاً بك في الدسوقي لمنتجات الألبان.
+اسألني عن منتجاتنا (جبنة قريش، زبدة وقشطة جاموسي) أو المعلومات الغذائية أو طرق التواصل.
+للأسعار والطلب: تواصل مباشرة عبر واتساب.`;
 
-يسعدنا اهتمامك بمنتجاتنا. نحن نقدم أجود أنواع الجبن ومنتجات الألبان بجودة عالية وأسعار مميزة، ونحرص دائماً على تقديم أفضل خدمة لعملائنا.
-
-📲 للتواصل المباشر وطلب المنتجات أو الاستفسار عن الأسعار اضغط على زر (واتساب).
-
-📘 لمتابعة أحدث العروض والمنشورات اضغط على زر (فيسبوك).
-
-🎵 لمشاهدة أحدث الفيديوهات والمحتوى اضغط على زر (تيك توك).
-
-💙 شكراً لزيارتك لموقعنا، ونتمنى أن تنال منتجاتنا إعجابك. نحن سعداء بخدمتك في أي وقت.`;
-
-type Msg = { id: number; role: "user" | "bot"; text: string; showActions?: boolean };
+type Msg = { id: number; role: "user" | "assistant"; text: string; showActions?: boolean };
 
 function TikTokIcon({ className = "" }: { className?: string }) {
   return (
@@ -24,40 +16,124 @@ function TikTokIcon({ className = "" }: { className?: string }) {
   );
 }
 
+function ContactActions() {
+  return (
+    <div className="mt-3 flex flex-col gap-2">
+      <a
+        href={waLink()} target="_blank" rel="noopener noreferrer"
+        className="inline-flex items-center justify-center gap-2 rounded-full bg-[var(--color-whatsapp)] px-4 py-2.5 text-sm font-bold text-white shadow-soft transition hover:opacity-90"
+      >
+        <MessageCircle className="h-4 w-4" /> تواصل عبر واتساب
+      </a>
+      <a
+        href={siteConfig.social.facebook} target="_blank" rel="noopener noreferrer"
+        className="inline-flex items-center justify-center gap-2 rounded-full bg-[#1877f2] px-4 py-2.5 text-sm font-bold text-white shadow-soft transition hover:opacity-90"
+      >
+        <Facebook className="h-4 w-4" /> فيسبوك
+      </a>
+      <a
+        href={siteConfig.social.tiktok} target="_blank" rel="noopener noreferrer"
+        className="inline-flex items-center justify-center gap-2 rounded-full bg-[#111] px-4 py-2.5 text-sm font-bold text-white shadow-soft transition hover:opacity-90"
+      >
+        <TikTokIcon className="h-4 w-4" /> تيك توك
+      </a>
+    </div>
+  );
+}
+
 export function ChatWidget() {
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState("");
-  const [typing, setTyping] = useState(false);
+  const [busy, setBusy] = useState(false);
   const [msgs, setMsgs] = useState<Msg[]>([]);
   const scrollRef = useRef<HTMLDivElement>(null);
   const idRef = useRef(1);
+  const abortRef = useRef<AbortController | null>(null);
 
   useEffect(() => {
     if (open && msgs.length === 0) {
-      setMsgs([{ id: idRef.current++, role: "bot", text: AUTO_REPLY, showActions: true }]);
+      setMsgs([{ id: idRef.current++, role: "assistant", text: WELCOME, showActions: true }]);
     }
   }, [open, msgs.length]);
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
-  }, [msgs, typing]);
+  }, [msgs, busy]);
 
-  const send = (e?: React.FormEvent) => {
+  const stop = () => {
+    abortRef.current?.abort();
+    abortRef.current = null;
+    setBusy(false);
+  };
+
+  const send = async (e?: React.FormEvent) => {
     e?.preventDefault();
     const t = input.trim();
-    if (!t) return;
-    setMsgs((m) => [...m, { id: idRef.current++, role: "user", text: t }]);
+    if (!t || busy) return;
     setInput("");
-    setTyping(true);
-    setTimeout(() => {
-      setTyping(false);
-      setMsgs((m) => [...m, { id: idRef.current++, role: "bot", text: AUTO_REPLY, showActions: true }]);
-    }, 1000);
+
+    const userMsg: Msg = { id: idRef.current++, role: "user", text: t };
+    const assistantId = idRef.current++;
+    const assistantMsg: Msg = { id: assistantId, role: "assistant", text: "" };
+    setMsgs((m) => [...m, userMsg, assistantMsg]);
+    setBusy(true);
+
+    const history = [...msgs, userMsg]
+      .filter((m) => m.role === "user" || m.role === "assistant")
+      .map((m) => ({ role: m.role, content: m.text }));
+
+    const ctrl = new AbortController();
+    abortRef.current = ctrl;
+
+    try {
+      const res = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ messages: history }),
+        signal: ctrl.signal,
+      });
+      if (!res.ok || !res.body) {
+        throw new Error(`HTTP ${res.status}`);
+      }
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let acc = "";
+      // Read stream
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        acc += decoder.decode(value, { stream: true });
+        setMsgs((m) =>
+          m.map((msg) => (msg.id === assistantId ? { ...msg, text: acc } : msg)),
+        );
+      }
+      // Show contact actions after every reply
+      setMsgs((m) =>
+        m.map((msg) => (msg.id === assistantId ? { ...msg, showActions: true } : msg)),
+      );
+    } catch (err) {
+      if ((err as Error).name !== "AbortError") {
+        setMsgs((m) =>
+          m.map((msg) =>
+            msg.id === assistantId
+              ? {
+                  ...msg,
+                  text:
+                    "تعذّر الاتصال بالمساعد الآن. يمكنك التواصل مباشرة عبر واتساب:",
+                  showActions: true,
+                }
+              : msg,
+          ),
+        );
+      }
+    } finally {
+      abortRef.current = null;
+      setBusy(false);
+    }
   };
 
   return (
     <>
-      {/* Floating button */}
       <button
         aria-label="افتح الدردشة"
         onClick={() => setOpen((v) => !v)}
@@ -66,7 +142,6 @@ export function ChatWidget() {
         {open ? <X className="h-6 w-6" /> : <MessageCircle className="h-7 w-7" />}
       </button>
 
-      {/* Chat window */}
       <div
         dir="rtl"
         className={`fixed bottom-24 right-5 z-50 w-[min(92vw,22rem)] origin-bottom-right overflow-hidden rounded-3xl border border-white/50 bg-white/80 shadow-card backdrop-blur-xl transition-all duration-300 sm:w-[24rem] ${
@@ -80,8 +155,8 @@ export function ChatWidget() {
               <MessageCircle className="h-5 w-5" />
             </div>
             <div>
-              <div className="text-sm font-extrabold">الدسوقي لمنتجات الألبان</div>
-              <div className="text-[11px] opacity-90">متصل الآن</div>
+              <div className="text-sm font-extrabold">مساعد الدسوقي</div>
+              <div className="text-[11px] opacity-90">{busy ? "يكتب…" : "متصل الآن"}</div>
             </div>
           </div>
           <button onClick={() => setOpen(false)} aria-label="إغلاق" className="rounded-full p-1 hover:bg-white/20">
@@ -99,43 +174,11 @@ export function ChatWidget() {
                     : "rounded-br-sm bg-white text-foreground"
                 }`}
               >
-                {m.text}
-                {m.showActions && (
-                  <div className="mt-3 flex flex-col gap-2">
-                    <a
-                      href={waLink()} target="_blank" rel="noopener noreferrer"
-                      className="inline-flex items-center justify-center gap-2 rounded-full bg-[var(--color-whatsapp)] px-4 py-2.5 text-sm font-bold text-white shadow-soft transition hover:opacity-90"
-                    >
-                      <MessageCircle className="h-4 w-4" /> تواصل عبر واتساب
-                    </a>
-                    <a
-                      href={siteConfig.social.facebook} target="_blank" rel="noopener noreferrer"
-                      className="inline-flex items-center justify-center gap-2 rounded-full bg-[#1877f2] px-4 py-2.5 text-sm font-bold text-white shadow-soft transition hover:opacity-90"
-                    >
-                      <Facebook className="h-4 w-4" /> مشاهدة منشورات فيسبوك
-                    </a>
-                    <a
-                      href={siteConfig.social.tiktok} target="_blank" rel="noopener noreferrer"
-                      className="inline-flex items-center justify-center gap-2 rounded-full bg-[#111] px-4 py-2.5 text-sm font-bold text-white shadow-soft transition hover:opacity-90"
-                    >
-                      <TikTokIcon className="h-4 w-4" /> مشاهدة فيديوهات تيك توك
-                    </a>
-                  </div>
-                )}
+                {m.text || (m.role === "assistant" && busy ? "…" : "")}
+                {m.showActions && <ContactActions />}
               </div>
             </div>
           ))}
-          {typing && (
-            <div className="mb-2 flex justify-end">
-              <div className="rounded-2xl rounded-br-sm bg-white px-3 py-3 shadow-sm">
-                <div className="flex gap-1">
-                  <span className="h-2 w-2 animate-bounce rounded-full bg-primary [animation-delay:0ms]" />
-                  <span className="h-2 w-2 animate-bounce rounded-full bg-primary [animation-delay:150ms]" />
-                  <span className="h-2 w-2 animate-bounce rounded-full bg-primary [animation-delay:300ms]" />
-                </div>
-              </div>
-            </div>
-          )}
         </div>
 
         <form onSubmit={send} className="flex items-center gap-2 border-t border-white/50 bg-white/70 p-2">
@@ -146,14 +189,26 @@ export function ChatWidget() {
             className="flex-1 rounded-full border border-border/70 bg-white px-4 py-2 text-sm outline-none focus:border-primary"
             aria-label="رسالتك"
             maxLength={500}
+            disabled={busy}
           />
-          <button
-            type="submit"
-            aria-label="إرسال"
-            className="grid h-10 w-10 place-items-center rounded-full bg-primary text-primary-foreground shadow-soft transition hover:opacity-90"
-          >
-            <Send className="h-4 w-4" />
-          </button>
+          {busy ? (
+            <button
+              type="button"
+              onClick={stop}
+              aria-label="إيقاف"
+              className="grid h-10 w-10 place-items-center rounded-full bg-red-500 text-white shadow-soft transition hover:opacity-90"
+            >
+              <Square className="h-4 w-4" />
+            </button>
+          ) : (
+            <button
+              type="submit"
+              aria-label="إرسال"
+              className="grid h-10 w-10 place-items-center rounded-full bg-primary text-primary-foreground shadow-soft transition hover:opacity-90"
+            >
+              <Send className="h-4 w-4" />
+            </button>
+          )}
         </form>
       </div>
     </>

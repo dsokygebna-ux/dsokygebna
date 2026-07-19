@@ -9,7 +9,7 @@ import {
 import logoAsset from "@/assets/logo.png.asset.json";
 import hero from "@/assets/hero.jpg";
 import { siteConfig, waLink, telLink } from "@/config/site";
-import { ThemeToggle } from "@/components/ThemeToggle";
+// ThemeToggle intentionally hidden per product decision; CSS kept for future use.
 import { BackToTop } from "@/components/BackToTop";
 import { ChatWidget } from "@/components/ChatWidget";
 
@@ -68,9 +68,8 @@ function Nav() {
           <a href="#reviews" className="hover:text-primary">آراء العملاء</a>
           <a href="#contact" className="hover:text-primary">تواصل معنا</a>
         </nav>
-        <div className="flex items-center gap-2">
-          <ThemeToggle />
-        </div>
+        <div className="flex items-center gap-2" />
+
       </div>
     </header>
   );
