@@ -77,6 +77,7 @@ export const Route = createFileRoute("/api/chat")({
           if (!upstream.ok || !upstream.body) {
             const errText = await upstream.text().catch(() => "");
             console.error("OpenAI error", upstream.status, errText);
+            if (upstream.status === 429) return new Response("quota", { status: 402 });
             return new Response("AI upstream error", { status: 502 });
           }
 
