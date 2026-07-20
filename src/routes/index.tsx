@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Toaster, toast } from "sonner";
 import {
   Phone, MapPin, Star, Send,
@@ -12,6 +12,8 @@ import { siteConfig, waLink, telLink } from "@/config/site";
 // ThemeToggle intentionally hidden per product decision; CSS kept for future use.
 import { BackToTop } from "@/components/BackToTop";
 import { ChatWidget } from "@/components/ChatWidget";
+import { OrderDialog } from "@/components/OrderDialog";
+
 
 export const Route = createFileRoute("/")({
   component: HomePage,
@@ -32,11 +34,12 @@ function TikTokIcon({ className = "" }: { className?: string }) {
 }
 
 function HomePage() {
+  const [orderProduct, setOrderProduct] = useState<{ id: string; label: string } | null>(null);
   return (
     <div className="min-h-screen bg-background text-foreground">
       <Nav />
       <Hero />
-      <Products />
+      <Products onOrder={(p) => setOrderProduct(p)} />
       <Reviews />
       <ContactSection />
       <Footer />
@@ -44,10 +47,12 @@ function HomePage() {
       <ChatWidget />
       <BackToTop />
       <OnlineStatusToaster />
+      <OrderDialog product={orderProduct} onClose={() => setOrderProduct(null)} />
       <Toaster position="top-center" richColors closeButton dir="rtl" />
     </div>
   );
 }
+
 
 // ------------------------- Nav -------------------------
 function Nav() {
@@ -137,7 +142,7 @@ function Hero() {
 }
 
 // ------------------------- Products -------------------------
-function Products() {
+function Products({ onOrder }: { onOrder: (p: { id: string; label: string }) => void }) {
   return (
     <section id="products" className="mx-auto max-w-6xl px-4 py-16">
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -155,21 +160,22 @@ function Products() {
               />
             </div>
             <div className="p-5 text-center">
-              <h3 className="text-xl font-extrabold text-foreground">{p.label}</h3>
+              <h3 className="text-[22px] font-semibold text-foreground">{p.label}</h3>
               <Link
                 to={`/benefits/${p.id}` as "/benefits/cheese"}
                 className="mt-2 inline-block text-sm font-bold text-primary hover:underline"
               >
                 اقرأ الفوائد الصحية →
               </Link>
-              <a
-                href={waLink(siteConfig.whatsapp.primary, `أرغب في طلب ${p.label}`)}
-                target="_blank" rel="noopener noreferrer"
-                className="mt-3 inline-flex items-center gap-2 rounded-full bg-[var(--color-whatsapp)] px-6 py-3 text-sm font-bold text-white shadow-soft transition hover:opacity-90"
+              <button
+                type="button"
+                onClick={() => onOrder({ id: p.id, label: p.label })}
+                className="mt-3 inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-base font-bold text-primary-foreground shadow-soft transition hover:-translate-y-0.5 hover:opacity-95"
               >
-                <MessageCircle className="h-4 w-4" /> اطلب واتساب
-              </a>
+                <MessageCircle className="h-4 w-4" /> اطلب الآن
+              </button>
             </div>
+
           </article>
         ))}
       </div>
