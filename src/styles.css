@@ -106,15 +106,33 @@ html.dark { color-scheme: dark; }
 
 @layer base {
   * { border-color: var(--color-border); }
-  html { direction: rtl; }
+  html { direction: rtl; -webkit-text-size-adjust: 100%; }
   body {
     background: var(--color-background);
     color: var(--color-foreground);
     font-family: var(--font-sans);
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.8;
+    letter-spacing: 0;
     -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
   }
-  h1, h2, h3, h4 { font-family: var(--font-display); letter-spacing: -0.01em; }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    letter-spacing: 0;
+    line-height: 1.3;
+    color: var(--color-foreground);
+  }
+  h1 { font-size: clamp(28px, 5vw, 42px); font-weight: 800; margin-bottom: 0.6em; }
+  h2 { font-size: clamp(24px, 4vw, 34px); font-weight: 700; margin-bottom: 0.55em; }
+  h3 { font-size: clamp(20px, 3.2vw, 28px); font-weight: 700; margin-bottom: 0.5em; }
+  h4 { font-size: clamp(18px, 2.6vw, 22px); font-weight: 600; margin-bottom: 0.45em; }
+  p  { margin-bottom: 1em; }
+  button, a { font-weight: 700; }
+  small, .text-small { font-size: 14px; line-height: 1.6; }
 }
+
 
 @utility hero-bg {
   background-image: var(--gradient-hero);
