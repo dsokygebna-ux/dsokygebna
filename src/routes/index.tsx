@@ -142,7 +142,7 @@ function Hero() {
 }
 
 // ------------------------- Products -------------------------
-function Products() {
+function Products({ onOrder }: { onOrder: (p: { id: string; label: string }) => void }) {
   return (
     <section id="products" className="mx-auto max-w-6xl px-4 py-16">
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
