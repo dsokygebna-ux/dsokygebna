@@ -34,11 +34,12 @@ function TikTokIcon({ className = "" }: { className?: string }) {
 }
 
 function HomePage() {
+  const [orderProduct, setOrderProduct] = useState<{ id: string; label: string } | null>(null);
   return (
     <div className="min-h-screen bg-background text-foreground">
       <Nav />
       <Hero />
-      <Products />
+      <Products onOrder={(p) => setOrderProduct(p)} />
       <Reviews />
       <ContactSection />
       <Footer />
@@ -46,10 +47,12 @@ function HomePage() {
       <ChatWidget />
       <BackToTop />
       <OnlineStatusToaster />
+      <OrderDialog product={orderProduct} onClose={() => setOrderProduct(null)} />
       <Toaster position="top-center" richColors closeButton dir="rtl" />
     </div>
   );
 }
+
 
 // ------------------------- Nav -------------------------
 function Nav() {
