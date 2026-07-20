@@ -160,21 +160,22 @@ function Products({ onOrder }: { onOrder: (p: { id: string; label: string }) => 
               />
             </div>
             <div className="p-5 text-center">
-              <h3 className="text-xl font-extrabold text-foreground">{p.label}</h3>
+              <h3 className="text-[22px] font-semibold text-foreground">{p.label}</h3>
               <Link
                 to={`/benefits/${p.id}` as "/benefits/cheese"}
                 className="mt-2 inline-block text-sm font-bold text-primary hover:underline"
               >
                 اقرأ الفوائد الصحية →
               </Link>
-              <a
-                href={waLink(siteConfig.whatsapp.primary, `أرغب في طلب ${p.label}`)}
-                target="_blank" rel="noopener noreferrer"
-                className="mt-3 inline-flex items-center gap-2 rounded-full bg-[var(--color-whatsapp)] px-6 py-3 text-sm font-bold text-white shadow-soft transition hover:opacity-90"
+              <button
+                type="button"
+                onClick={() => onOrder({ id: p.id, label: p.label })}
+                className="mt-3 inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-base font-bold text-primary-foreground shadow-soft transition hover:-translate-y-0.5 hover:opacity-95"
               >
-                <MessageCircle className="h-4 w-4" /> اطلب واتساب
-              </a>
+                <MessageCircle className="h-4 w-4" /> اطلب الآن
+              </button>
             </div>
+
           </article>
         ))}
       </div>
