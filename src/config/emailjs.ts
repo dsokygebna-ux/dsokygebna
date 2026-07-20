@@ -2,5 +2,5 @@
 export const emailjsConfig = {
   serviceId: "Mostafa",
   templateId: "template_s6iye1m",
-  publicKey: "EPG-AFdQ6Tg_tjtpN",
+  publicKey: "jqb-qmPPMMwq2OL6t"
 } as const;
