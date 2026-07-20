@@ -31,8 +31,9 @@
   --color-ring: var(--ring);
   --color-whatsapp: var(--whatsapp);
 
-  --font-sans: "Cairo", "Tajawal", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Tajawal", "Cairo", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Cairo", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Cairo", "Tajawal", ui-sans-serif, system-ui, sans-serif;
+
 
   --shadow-soft: 0 10px 30px -12px color-mix(in oklab, var(--primary) 25%, transparent);
   --shadow-card: 0 20px 40px -20px color-mix(in oklab, var(--primary) 20%, transparent);
