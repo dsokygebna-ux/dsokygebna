@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Toaster, toast } from "sonner";
 import {
   Phone, MapPin, Star, Send,
@@ -12,6 +12,8 @@ import { siteConfig, waLink, telLink } from "@/config/site";
 // ThemeToggle intentionally hidden per product decision; CSS kept for future use.
 import { BackToTop } from "@/components/BackToTop";
 import { ChatWidget } from "@/components/ChatWidget";
+import { OrderDialog } from "@/components/OrderDialog";
+
 
 export const Route = createFileRoute("/")({
   component: HomePage,
