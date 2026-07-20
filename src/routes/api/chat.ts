@@ -57,29 +57,30 @@ export const Route = createFileRoute("/api/chat")({
 
           if (messages.length === 0) return new Response("Missing messages", { status: 400 });
 
-          const key = process.env.OPENAI_API_KEY;
+          const key = process.env.LOVABLE_API_KEY;
           if (!key) return new Response("AI not configured", { status: 500 });
 
-          const upstream = await fetch("https://api.openai.com/v1/chat/completions", {
+          const upstream = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
             method: "POST",
             headers: {
               "content-type": "application/json",
               authorization: `Bearer ${key}`,
             },
             body: JSON.stringify({
-              model: "gpt-4o-mini",
+              model: "google/gemini-2.5-flash",
               stream: true,
-              temperature: 0.5,
               messages: [{ role: "system", content: SYSTEM_PROMPT }, ...messages],
             }),
           });
 
           if (!upstream.ok || !upstream.body) {
             const errText = await upstream.text().catch(() => "");
-            console.error("OpenAI error", upstream.status, errText);
-            if (upstream.status === 429) return new Response("quota", { status: 402 });
+            console.error("AI gateway error", upstream.status, errText);
+            if (upstream.status === 429) return new Response("rate", { status: 429 });
+            if (upstream.status === 402) return new Response("credits", { status: 402 });
             return new Response("AI upstream error", { status: 502 });
           }
+
 
           // Convert OpenAI SSE → plain text stream of deltas.
           const reader = upstream.body.getReader();
